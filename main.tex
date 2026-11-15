@@ -1,0 +1,402 @@
+\documentclass[conference]{IEEEtran}
+%paquetes
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish, es-nodecimaldot, es-noshorthands]{babel}
+\usepackage{newtxtext, newtxmath}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{groupplots}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage[table]{xcolor}
+\usepackage{cite}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning}
+\definecolor{primaryblue}{RGB}{27, 54, 93}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primaryblue,
+    citecolor=primaryblue,
+    urlcolor=primaryblue
+}
+
+\begin{document}
+
+\title{Calidad del sueño, jet lag social y estrés: análisis observacional de 69 noches}
+
+\author{\IEEEauthorblockN{Diego Arturo Almonte Villagómez}
+\IEEEauthorblockA{Ingeniería en Inteligencia Artificial, Universidad Autónoma Chapingo, Texcoco - Estado de México.}}
+
+
+\maketitle
+
+\begin{abstract}
+\textbf Dormir poco entre semana e intentar recuperarse los fines de semana es un hábito muy común que suele pasar desapercibido hasta que se mide. En este reporte analizo mis propios hábitos de sueño como estudiante foráneo de Ingeniería en Inteligencia Artificial, con una rutina marcada por exámenes los lunes, miércoles y viernes ($N=1$), con 69 noches consecutivas registradas del $24/08/2026$ al $31/10/2026$: hora de acostarse y de despertar, horas totales dormidas, calidad (1--10), despertares nocturnos, uso del celular antes de dormir, ejercicio y estrés (1--10). El sueño promedió $8.11\pm1.92$~h y la calidad $7.00\pm1.46$; sin embargo, entre semana se durmió $7.23\pm1.06$~h con calidad $6.48\pm1.36$, y en fin de semana $10.43\pm1.74$~h con calidad $8.37\pm0.50$ ($p < 0.001$ en ambos casos), lo que implica un jet lag social de $1.97$~h (IC 95\%: $1.41$--$2.50$). La duración fue el factor más asociado a la calidad (Spearman $\rho=0.77$; regresión: $+0.49$ puntos por hora, IC 95\%: $0.30$--$0.67$). El estrés, los despertares y el ejercicio no mostraron asociación independiente; las noches previas a examen no difirieron de las demás noches entre semana, y el uso del celular ocurrió las 69 noches.
+\end{abstract}
+
+\begin{IEEEkeywords}
+calidad del sueño, jet lag social y estrés.
+\end{IEEEkeywords}
+
+\section{Introducción}
+
+\subsection{Contexto y problema}
+El sueño es fundamental para la salud. Se ha propuesto entenderlo como una dimensión multifactorial que incluye duración, continuidad, regularidad, satisfacción y alerta diurna~\cite{ref1}, y se recomienda que los adultos duerman al menos 7~h por noche, con un rango de 7 a 9~h para adultos jóvenes y de mediana edad~\cite{ref2,ref3}. Mejorar la calidad del sueño se ha asociado con mejor salud mental en ensayos aleatorizados~\cite{ref4}.
+
+Los estudiantes universitarios son un grupo con patrones de sueño irregulares y múltiples factores que lo alteran~\cite{ref5,ref6}. Como estudiante foráneo de Ingeniería en Inteligencia Artificial, Tengo exámenes semanales los lunes, miércoles y viernes (los de los lunes y miércoles valen el 100\% de la calificación) lo cual, sumado a los exámenes, trabajos y tareas de las demás materias, son la principal fuente de estrés. Al comienzo del análisis asistía al gimnasio y a entrenamientos de básquetbol, pero por la carga académica y el estrés deje de asistir. Entre semana la hora de dormir a veces es tarde por estudiar y hacer tareas, lo que causa un desvelo y dormir mal, y los fines de semana hay más tiempo para dormir todo lo que se pueda. El problema es que esta rutina afecta considerablemente la salud mental y física, lo cual puede tener repercusiones a largo plazo. 
+
+\subsection{Justificación}
+Al investigar, los datos resultan informativos porque los promedios de poblaciones no siempre describen a una persona concreta. El análisis de 69 noches permite (i) cuantificar el patrón y (ii) identificar asociaciones.
+
+\subsection{Antecedentes}
+La discrepancia entre horarios de días laborales y libres genera jet lag social, definido como la diferencia entre el punto medio del sueño en días libres y en días de trabajo~\cite{ref8}; en datos poblacionales se ha asociado con mayor índice de masa corporal~\cite{ref9}. El uso de dispositivos electrónicos antes de dormir se asocia con peor sueño en meta-análisis recientes (correlación agrupada $r=0.28$, IC 95\%: $0.21$--$0.35$, para uso general)~\cite{ref10}, y el uso del celular al acostarse se ha vinculado con peor sueño en adultos~\cite{ref11}, con procesos psicológicos mediadores~\cite{ref12,ref13}. Se ha documentado que la actividad física, el celular y el estrés percibido se relacionan con la calidad del sueño en universitarios~\cite{ref14,ref15}; las revisiones indican beneficios del ejercicio sobre el sueño~\cite{ref16}, y el estrés psicosocial lo deteriora~\cite{ref17}. La evidencia en adolescentes también apunta a asociaciones entre dispositivos y sueño~\cite{ref18,ref19}, pero estos estudios son poblacionales y no sustituyen el análisis de una persona.
+
+\subsection{Solución propuesta y objetivos}
+Se propone llevar un registro para reflexionar sobre los datos y ver en que ambito se debe de mejorar. \textbf{Objetivo general:} identificar qué factores registrados se asocian con mi calidad de sueño. \textbf{Objetivos específicos:} (1) describir el patrón de sueño; (2) comparar días entre semana y fin de semana y calcular el jet lag social; (3) estimar asociaciones entre calidad y duración, hora de acostarse, despertares, estrés, ejercicio y uso del celular; (4) proponer un protocolo de verificación adaptado a mi horario. \textbf{Hipótesis:} H1, la calidad aumenta con las horas de sueño; H2, los fines de semana difieren de los días entre semana; H3, el ejercicio se asocia con mejor calidad; H4, el estrés se asocia con peor calidad.
+
+\section{Metodología}
+
+\subsection{Diseño y participante}
+Estudio observacional, longitudinal, con registro diario durante 69 noches consecutivas (lunes 24/08/2026 a sábado 31/10/2026). Contexto: soy estudiante foráneo de Ingeniería en Inteligencia Artificial con exámenes los lunes, miércoles y viernes,más la carga académica de las demás  materias, y dejar de asistir al gimnasio y entrenamientos de básquetbol por la carga académica.
+
+\subsection{Variables e instrumentos}
+\begin{table}[ht]
+\centering
+\caption{Estadística descriptiva ($n=69$ noches). Las horas de acostarse y despertar se expresan en formato de 24 horas.}
+\label{tab:descriptiva}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Variable} & \textbf{Media (DE)} & \textbf{IC 95\%} & \textbf{Mediana} & \textbf{Rango} \\
+\midrule
+Horas de sueño & 8.11 (1.92) & 7.65--8.57 & 7.67 & 5.07--13.00 \\
+Calidad (1--10) & 7.00 (1.46) & 6.65--7.35 & 7 & 3--9 \\
+Despertares & 0.29 (0.49) & 0.17--0.41 & 0 & 0--2 \\
+Estrés (1--10) & 7.48 (1.57) & 7.10--7.85 & 8 & 2--9 \\
+Acostarse & 00:28 (1.16) & 00:11--00:45 & 00:00 & 22:00--03:00 \\
+Despertar & 08:35 (1.79) & 08:09--09:01 & 07:40 & 07:00--13:00 \\
+\midrule
+Celular antes de dormir & \multicolumn{4}{c}{69 de 69 noches (100\%)} \\
+Ejercicio & \multicolumn{4}{c}{21 de 69 días (30.4\%)} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\subsection{Preparación y validación de datos}
+Las horas totales se calcularon a partir de las horas de acostarse y despertar:
+\begin{equation}
+D_i = (t_i^{\text{des}} - t_i^{\text{ac}}) \bmod 24
+\end{equation}
+Para promediar horas de acostarse se transformaron los valores anteriores a las 12:00 sumando 24~h (p.~ej., 00:30 pasa a 24.5), de modo que la media respeta la medianoche. El punto medio del sueño y el jet lag social se calcularon como:
+\begin{equation}
+PM_i = t_i^{\text{ac}} + \frac{D_i}{2}, \qquad JLS = \overline{PM}_F - \overline{PM}_L
+\end{equation}
+donde $F$ son los días libres (sábado y domingo) y $L$ los de lunes a viernes. No faltó ningún dato (69 de 69 noches).
+
+\subsection{Análisis estadístico}
+Se reportan media, desviación estándar (DE) e intervalo de confianza (IC) del 95\% con distribución $t$. Para comparar grupos se usó la prueba $U$ de Mann-Whitney (variables ordinales o no normales) y la $d$ de Cohen como tamaño de efecto:
+\begin{equation}
+d = \frac{\overline{x}_1 - \overline{x}_2}{s_p}
+\end{equation}
+Las asociaciones con la calidad se estimaron con la correlación de Spearman, con IC 95\% por bootstrap (3000 remuestreos), y con una regresión lineal múltiple por mínimos cuadrados ordinarios:
+\begin{equation}
+C_i = \beta_0 + \beta_1 H_i + \beta_2 E_i + \beta_3 W_i + \beta_4 X_i + \beta_5 A_i + \varepsilon_i
+\end{equation}
+con $C$ calidad, $H$ horas, $E$ estrés, $W$ despertares, $X$ ejercicio ($0/1$) y $A$ horas de acostarse después de las 00:00. Se revisó la colinealidad con el factor de inflación de la varianza (VIF). Se fijó $\alpha=0.05$ sin corrección por comparaciones múltiples, por lo que el análisis es exploratorio.
+
+\begin{figure}[htbp]
+    \centering
+    \resizebox{\linewidth}{!}{
+    \begin{tikzpicture}[
+        node distance=0.8cm and 0.7cm,
+        caja/.style={
+            rectangle, 
+            rounded corners=4pt, 
+            draw=black!80, 
+            thick, 
+            fill=blue!5, 
+            text width=3.5cm, 
+            minimum height=1.5cm, 
+            align=center, 
+            font=\small\sffamily
+        },
+        flecha/.style={
+            -{Stealth[length=2.5mm]}, 
+            thick, 
+            draw=black!80
+        }
+    ]
+     
+        \node[caja] (n1) {\textbf{1. Registro diario}\\ \footnotesize $N = 69$ noches\\(24 ago -- 31 oct)};
+        \node[caja, right=of n1] (n2) {\textbf{2. Hoja de cálculo}\\ \footnotesize Horas, calidad, estrés,\\actividad y pantallas};
+        \node[caja, right=of n2] (n3) {\textbf{3. Validación}\\ \footnotesize Revisión de tipos,\\rangos y consistencia};
+
+        \node[caja, below=0.9cm of n3] (n4) {\textbf{4. Descriptivos}\\ \footnotesize Media $\pm$ DE por día\\y tipo de jornada};
+        \node[caja, left=of n4] (n5) {\textbf{5. Comparaciones y asociaciones}\\ \footnotesize Entre semana vs. fin\\y correlaciones ($r$)};
+    
+
+     
+        \draw[flecha] (n1) -- (n2);
+        \draw[flecha] (n2) -- (n3);
+        \draw[flecha] (n3) -- (n4);
+        \draw[flecha] (n4) -- (n5);
+       
+    \end{tikzpicture}%
+    }
+    \caption{Flujo de recolección y análisis de los datos de sueño ($N = 69$).}
+    \label{fig:flujo_datos}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\fbox{\parbox{0.95\columnwidth}{
+\footnotesize\ttfamily
+\textbf{Algoritmo 1: Análisis (todas las noches y L--V)}\\
+1 \ leer hoja; conservar filas con fecha\\
+2 \ D <- (desp - acost) mod 24; verificar vs registro\\
+3 \ acost\_c <- acost + 24 si acost < 12:00\\
+4 \ PM <- acost\_c + D/2; JLS <- media(PM|S,D) - media(PM|L-V)\\
+5 \ descriptivos con IC95\% (t)\\
+6 \ Mann-Whitney: L-V vs S-D; ejercicio Si/No\\
+7 \ Spearman(calidad, x) + IC bootstrap\\
+8 \ OLS(calidad \textasciitilde{} horas+estres+desp+ejer+acost)\\
+9 \ repetir 6-8 solo con L-V (n=50)\\
+10 reportar tamaños de efecto, no solo p
+}}
+\end{figure}
+\section{Resultados}
+\subsection{Estadística descriptiva}
+La Tabla~\ref{tab:descriptiva} resume las 69 noches. El 78\% de las noches (54) alcanzó al menos 7~h y 42 noches (61\%) cayeron en el rango de 7 a 9~h; 10 noches (14\%) fueron menores de 6~h. Se registró al menos un despertar nocturno en 19 noches. El celular se usó antes de dormir las 69 noches (100\%) y se hizo ejercicio 21 días (30.4\%). La Fig.~\ref{fig:series} muestra las series diarias.
+
+\begin{figure*}[htbp] 
+\begin{tikzpicture}
+\begin{groupplot}[
+    group style={
+        group size=1 by 3,
+        vertical sep=0.45cm,
+        x descriptions at=edge bottom
+    },
+    width=0.92\textwidth,
+    height=3.6cm,
+    xmin=0, xmax=70,
+    grid=both,
+    grid style={dotted, gray!50},
+    tick label style={font=\scriptsize},
+    label style={font=\footnotesize},
+    xtick={1, 8, 15, 22, 29, 36, 43, 50, 57, 64},
+    xticklabels={24 Ago, 31 Ago, 07 Sep, 14 Sep, 21 Sep, 28 Sep, 05 Oct, 12 Oct, 19 Oct, 26 Oct},
+    xticklabel style={rotate=30, anchor=east}
+]
+
+% --- PANEL 1: HORAS DE SUEÑO ---
+\nextgroupplot[
+    ylabel={Horas (h)},
+    ymin=4.2, ymax=15.0,
+    ytick={5, 7, 9, 11, 13},
+    legend style={at={(0.02,0.94)}, anchor=north west, legend columns=3, font=\scriptsize, fill=white, fill opacity=0.9}
+]
+\addplot[draw=none, fill=green!60!black, fill opacity=0.12, forget plot] coordinates {(0,7) (70,7) (70,9) (0,9)};
+\addplot[dashed, green!60!black, line width=0.6pt, forget plot] coordinates {(0,7) (70,7)};
+\addplot[dashed, green!60!black, line width=0.6pt, forget plot] coordinates {(0,9) (70,9)};
+
+\addplot[gray!70, line width=0.6pt, forget plot] coordinates {
+(1,8.0) (2,5.33) (3,8.42) (4,5.75) (5,7.0) (6,9.0) (7,11.67) (8,7.0) (9,7.5) (10,7.67) (11,5.33) (12,5.5) (13,10.0) (14,8.42) (15,5.5) (16,6.5) (17,5.67) (18,8.0) (19,5.33) (20,12.5) (21,9.0) (22,6.5) (23,8.67) (24,9.5) (25,7.67) (26,6.5) (27,13.0) (28,11.0) (29,8.0) (30,7.5) (31,7.67) (32,7.67) (33,5.5) (34,9.0) (35,8.67) (36,7.67) (37,7.67) (38,7.5) (39,8.67) (40,8.0) (41,9.0) (42,13.0) (43,7.67) (44,7.67) (45,8.67) (46,7.5) (47,6.67) (48,8.0) (49,12.0) (50,7.67) (51,7.67) (52,7.5) (53,8.67) (54,6.67) (55,10.0) (56,12.0) (57,7.67) (58,7.67) (59,7.5) (60,5.07) (61,7.67) (62,9.0) (63,13.0) (64,7.67) (65,7.67) (66,7.67) (67,7.67) (68,5.67) (69,10.0)
+};
+
+\addlegendimage{area legend, fill=green!60!black, fill opacity=0.15, draw=green!60!black, dashed}
+\addlegendentry{Recomendado (7--9 h)}
+
+\addplot[only marks, mark=*, mark size=1.6pt, blue!80!black] coordinates {
+(1,8.0) (2,5.33) (3,8.42) (4,5.75) (5,7.0) (8,7.0) (9,7.5) (10,7.67) (11,5.33) (12,5.5) (15,5.5) (16,6.5) (17,5.67) (18,8.0) (19,5.33) (22,6.5) (23,8.67) (24,9.5) (25,7.67) (26,6.5) (29,8.0) (30,7.5) (31,7.67) (32,7.67) (33,5.5) (36,7.67) (37,7.67) (38,7.5) (39,8.67) (40,8.0) (43,7.67) (44,7.67) (45,8.67) (46,7.5) (47,6.67) (50,7.67) (51,7.67) (52,7.5) (53,8.67) (54,6.67) (57,7.67) (58,7.67) (59,7.5) (60,5.07) (61,7.67) (64,7.67) (65,7.67) (66,7.67) (67,7.67) (68,5.67)
+};
+\addlegendentry{Lun--Vie ($n=50$)}
+
+\addplot[only marks, mark=*, mark size=1.8pt, orange!90!black] coordinates {
+(6,9.0) (7,11.67) (13,10.0) (14,8.42) (20,12.5) (21,9.0) (27,13.0) (28,11.0) (34,9.0) (35,8.67) (41,9.0) (42,13.0) (48,8.0) (49,12.0) (55,10.0) (56,12.0) (62,9.0) (63,13.0) (69,10.0)
+};
+\addlegendentry{Sáb--Dom ($n=19$)}
+
+% --- PANEL 2: CALIDAD DEL SUEÑO ---
+\nextgroupplot[
+    ylabel={Calidad (1--10)},
+    ymin=2, ymax=10.5,
+    ytick={2, 4, 6, 8, 10}
+]
+\addplot[gray!70, line width=0.6pt, forget plot] coordinates {
+(1,6) (2,4) (3,6) (4,4) (5,6) (6,8) (7,8) (8,6) (9,7) (10,7) (11,7) (12,3) (13,8) (14,9) (15,5) (16,6) (17,4) (18,8) (19,5) (20,8) (21,9) (22,6) (23,8) (24,8) (25,7) (26,6) (27,9) (28,9) (29,6) (30,7) (31,7) (32,6) (33,8) (34,8) (35,9) (36,7) (37,7) (38,8) (39,9) (40,7) (41,8) (42,9) (43,8) (44,8) (45,9) (46,8) (47,7) (48,8) (49,9) (50,7) (51,6) (52,7) (53,8) (54,5) (55,8) (56,8) (57,7) (58,7) (59,6) (60,4) (61,7) (62,8) (63,8) (64,6) (65,6) (66,7) (67,6) (68,4) (69,8)
+};
+\addplot[only marks, mark=*, mark size=1.6pt, blue!80!black] coordinates {
+(1,6) (2,4) (3,6) (4,4) (5,6) (8,6) (9,7) (10,7) (11,7) (12,3) (15,5) (16,6) (17,4) (18,8) (19,5) (22,6) (23,8) (24,8) (25,7) (26,6) (29,6) (30,7) (31,7) (32,6) (33,8) (36,7) (37,7) (38,8) (39,9) (40,7) (43,8) (44,8) (45,9) (46,8) (47,7) (50,7) (51,6) (52,7) (53,8) (54,5) (57,7) (58,7) (59,6) (60,4) (61,7) (64,6) (65,6) (66,7) (67,6) (68,4)
+};
+\addplot[only marks, mark=*, mark size=1.8pt, orange!90!black] coordinates {
+(6,8) (7,8) (13,8) (14,9) (20,8) (21,9) (27,9) (28,9) (34,8) (35,9) (41,8) (42,9) (48,8) (49,9) (55,8) (56,8) (62,8) (63,8) (69,8)
+};
+
+% --- PANEL 3: NIVEL DE ESTRÉS ---
+\nextgroupplot[
+    ylabel={Estrés (1--10)},
+    xlabel={Fecha de registro (2026)},
+    ymin=1, ymax=10.5,
+    ytick={2, 4, 6, 8, 10}
+]
+\addplot[gray!70, line width=0.6pt, forget plot] coordinates {
+(1,8) (2,7) (3,9) (4,6) (5,8) (6,4) (7,3) (8,8) (9,7) (10,9) (11,6) (12,7) (13,2) (14,3) (15,8) (16,7) (17,7) (18,8) (19,7) (20,6) (21,6) (22,8) (23,9) (24,8) (25,9) (26,8) (27,6) (28,7) (29,9) (30,9) (31,9) (32,9) (33,8) (34,7) (35,6) (36,8) (37,8) (38,9) (39,7) (40,8) (41,7) (42,6) (43,9) (44,9) (45,9) (46,8) (47,8) (48,7) (49,6) (50,9) (51,9) (52,9) (53,8) (54,8) (55,6) (56,7) (57,9) (58,9) (59,9) (60,8) (61,7) (62,6) (63,6) (64,9) (65,9) (66,9) (67,8) (68,7) (69,6)
+};
+\addplot[only marks, mark=*, mark size=1.6pt, blue!80!black] coordinates {
+(1,8) (2,7) (3,9) (4,6) (5,8) (8,8) (9,7) (10,9) (11,6) (12,7) (15,8) (16,7) (17,7) (18,8) (19,7) (22,8) (23,9) (24,8) (25,9) (26,8) (29,9) (30,9) (31,9) (32,9) (33,8) (36,8) (37,8) (38,9) (39,7) (40,8) (43,9) (44,9) (45,9) (46,8) (47,8) (50,9) (51,9) (52,9) (53,8) (54,8) (57,9) (58,9) (59,9) (60,8) (61,7) (64,9) (65,9) (66,9) (67,8) (68,7)
+};
+\addplot[only marks, mark=*, mark size=1.8pt, orange!90!black] coordinates {
+(6,4) (7,3) (13,2) (14,3) (20,6) (21,6) (27,6) (28,7) (34,7) (35,6) (41,7) (42,6) (48,7) (49,6) (55,6) (56,7) (62,6) (63,6) (69,6)
+};
+
+\end{groupplot}
+\end{tikzpicture}
+\caption{Horas de sueño, calidad y estrés por noche (azul: lunes a viernes; naranja: sábado y domingo).}
+\label{fig:series}
+\end{figure*}
+
+\subsection{Días entre semana frente a fin de semana}
+Los fines de semana se durmió más, con mejor calidad y menos estrés (Tabla~\ref{tab:lv_sd}). La hora de acostarse no difirió ($p=0.52$); la diferencia viene de la hora de despertar, casi constante entre semana (07:36, DE 15~min) y tardía los fines de semana (11:11). El jet lag social fue de $1.97$~h (IC 95\% bootstrap: $1.41$--$2.50$), con puntos medios del sueño de 03:59 (L--V) y 05:57 (S--D). Entre semana, 15 de 50 noches (30\%) fueron menores de 7~h y 16 de 19 noches de fin de semana (84\%) fueron de 9~h o más. Entre semana, 41 de 50 noches (82\%) empezaron después de las 00:00 y 16 (32\%) después de la 01:00.
+
+\begin{table}[h]
+\centering
+\caption{Lunes a viernes ($n=50$) vs  sábado y domingo ($n=19$). Media (DE); prueba $U$ de Mann-Whitney.}
+\label{tab:lv_sd}
+\footnotesize
+\begin{tabular}{lccc}
+\toprule
+\textbf{Variable} & \textbf{L--V} & \textbf{S--D} & \textbf{$p$} \\
+\midrule
+Horas de sueño & 7.23 (1.06) & 10.43 (1.74) & $<0.001$ \\
+Calidad (1--10) & 6.48 (1.36) & 8.37 (0.50) & $<0.001$ \\
+Despertares & 0.28 (0.50) & 0.32 (0.48) & 0.69 \\
+Estrés (1--10) & 8.18 (0.87) & 5.63 (1.50) & $<0.001$ \\
+Acostarse (hh:mm) & 00:22 & 00:44 & 0.52 \\
+Despertar (hh:mm) & 07:36 & 11:11 & $<0.001$ \\
+Ejercicio (días) & 19 (38\%) & 2 (11\%) & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+\newpage
+\subsection{Asociaciones con la calidad del sueño}
+La calidad se asoció fuertemente con las horas de sueño (Spearman $\rho=0.77$; Pearson $r=0.71$). La calidad media fue $4.80$ con menos de 6~h ($n=10$), $6.00$ entre 6 y 7~h ($n=5$), $6.84$ entre 7 y 8~h ($n=25$), $7.75$ entre 8 y 9~h ($n=12$) y $8.29$ con 9~h o más ($n=17$). Con todas las noches, el estrés y la hora de acostarse mostraron relaciones negativas moderadas, pero con solo días entre semana el estrés cambió de signo (Tabla~\ref{tab:spearman}). El ejercicio no se asoció con la calidad: $6.76$ con ejercicio y $7.10$ sin él ($p=0.37$; $d=-0.23$); entre semana, $6.53$ frente a $6.45$ ($p=0.88$).
+
+El modelo de regresión múltiple explicó el 52\% de la varianza. de la ($R_{\text{aj}}^2=0.48$; VIF máximo $1.92$). Solo las horas de sueño tuvieron un efecto independiente (Tabla~\ref{tab:ols}): cada hora adicional se asoció con $+0.49$ puntos de calidad. En días entre semana el coeficiente fue de $0.83$ puntos por hora (IC 95\%: $0.50$--$1.16$; $R_{\text{aj}}^2=0.49$). Como en entre semana el despertar casi no varía, la hora de acostarse explica la duración ($\rho=-0.92$ entre hora de acostarse y horas de sueño).
+
+
+\begin{table}[h]
+\centering
+\caption{Correlación de Spearman con la calidad del sueño [IC 95\% bootstrap].}
+\label{tab:spearman}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lcc}
+\toprule
+\textbf{Variable} & \textbf{Todas ($n=69$)} & \textbf{Solo L--V ($n=50$)} \\
+\midrule
+Horas de sueño & $0.77$ [$0.63, 0.86$] & $0.59$ [$0.32, 0.80$] \\
+Hora de acostarse (más tarde) & $-0.37$ [$-0.60, -0.11$] & $-0.61$ [$-0.81, -0.35$] \\
+Estrés & $-0.32$ [$-0.53, -0.06$] & $0.36$ [$0.08, 0.61$] \\
+Despertares & $-0.12$ [$-0.37, 0.14$] & $-0.29$ [$-0.53, 0.00$] \\
+Ejercicio (sí) & $-0.11$ [$-0.35, 0.14$] & $0.02$ [$-0.29, 0.31$] \\
+Fin de semana & $0.65$ [$0.52, 0.76$] & --- \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Regresión lineal múltiple de la calidad ($n=69$, $R^2=0.52$).}
+\label{tab:ols}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lccc}
+\toprule
+\textbf{Predictor} & \textbf{$\beta$} & \textbf{IC 95\%} & \textbf{$p$} \\
+\midrule
+Intercepto & $3.47$ & $0.64$--$6.29$ & $0.017$ \\
+Horas de sueño (por h) & $0.49$ & $0.30$--$0.67$ & $<0.001$ \\
+Estrés (por punto) & $-0.04$ & $-0.25$--$0.17$ & $0.69$ \\
+Despertares (por despertar) & $-0.21$ & $-0.75$--$0.32$ & $0.43$ \\
+Ejercicio (sí) & $0.07$ & $-0.51$--$0.64$ & $0.82$ \\
+Acostarse (por h después de 00:00) & $-0.14$ & $-0.42$--$0.15$ & $0.33$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+\newpage
+\subsection{Tendencia a lo largo de las semanas}
+El estrés aumentó $0.16$ puntos por semana (regresión lineal, $p=0.018$), de una media semanal de $6.4$ en la semana 1 a $8.0$ en la semana 10; la calidad y las horas no mostraron tendencia significativa ($p=0.26$ y $p=0.24$). El ejercicio fue de 3, 4 y 5 días en las semanas 1 a 3 (12 días), de 2 o 3 días en las semanas 4 a 7 (9 días) y ninguno en las semanas 8 a 10; la última sesión fue el $08/10/2026$. Esto ocurrió a consecuencia del estrés y la carga académica, que aumentaron después de esos días e influyeron en el abandono de la actividad.
+
+
+\section{Análisis y discusión}
+
+\paragraph{(H1).} La asociación entre horas y calidad es la más grande: aparece todas las noches, solo entre semana, con relación de rangos y con regresión. Esto coincide con la importancia de la duración dentro del concepto de sueño saludable~\cite{ref1}. Aun así, la dirección causal no está establecida: una noche mala podría acortar o alargar el sueño y la calidad se evalúa al día siguiente al reflexionar sobre qué tan reparador fue el descanso
+
+\paragraph{Fin de semana y jet lag social (H2).} La diferencia no se debe a acostarse más temprano sino a despertar $3.6$~h después. Un jet lag social de casi 2~h está en el rango que la literatura considera relevante~\cite{ref8,ref9}. El patrón es compatible con una deuda de sueño entre semana (30\% de noches con menos de 7~h) compensada el fin de semana. Dormir $10.4$~h los fines de semana es compatible con recuperar lo perdido por los desvelos de estudio entre semana. Además, el fin de semana también cambian otras cosas (estrés, actividades), de modo que ``fin de semana'' agrupa varios factores.
+
+\paragraph{Ejercicio (H3).} No se encontró diferencia significativa entre los días con y sin ejercicio, aunque la evidencia científica respalda sus beneficios~\cite{ref16}. Al registrarse únicamente 21 días de ejercicio y ninguno durante las últimas tres semanas, la potencia estadística es baja. El abandono del gimnasio y del básquetbol debido a la carga académica y al estrés queda reflejado en la base de datos, sin sesiones registradas desde el 08/10/2026. Así, la falta de ejercicio funciona como una consecuencia de la carga escolar más que como un factor independiente. Si bien esta diferencia no se ve en las métricas de sueño, sí resulta perceptible en mi estado físico y sensación de fatiga.
+
+\paragraph{Estrés (H4).} La relación negativa con todas las noches (Tabla~\ref{tab:spearman}) desaparece al ajustar por horas ($\beta=-0.04$) y se invierte entre semana ($\rho=0.36$). Es un caso de confusión por el tipo de día: el estrés es alto precisamente cuando el sueño es corto, y entre las semanas 1 y 7 el estrés y la calidad media subieron juntos, mientras que en las semanas 8 a 10 la calidad bajó pero manteniendo el mismo estrés. La tendencia ascendente del estrés ($+0.16$/semana) sugiere que el estrés refleja sobre todo la carga académica (exámenes más tareas y trabajos de todas las materias), que probablemente actúa a la vez sobre la hora de acostarse. El esquema puede ser \textit{carga académica $\rightarrow$ acostarse tarde $\rightarrow$ menos horas $\rightarrow$ peor calidad}: los datos son compatibles con él (entre semana la hora de acostarse explica casi toda la duración, $\rho=-0.92$), y el estrés se autorreporta como una sola cifra que no separa sus fuentes.
+
+\paragraph{Celular.} Al usarse todas las noches, es probable que influya en el nivel de calidad promedio. La literatura lo asocia con peor sueño~\cite{ref10,ref11,ref12}.
+
+\paragraph{Hipótesis de acción y protocolo de verificación.} Si se adelantara la hora de dormir dado que el despertar es fijo por las clases (07:36 en promedio), la calidad aumentaría en alrededor de $0.8$ puntos por hora (IC 95\%: $0.50$--$1.16$). Acostarse 1~h antes equivaldría a pasar de 00:22 en promedio a unas 23:20. Como los desvelos son por estudiar y hacer tareas, ese cambio solo es realista si se reorganiza la carga: se propone un protocolo $A/B$ de 4 semanas, con dos semanas de rutina actual y dos con (i) una hora límite para estudiar y hacer tareas, adelantando parte del trabajo a horas del fin de semana, y (ii) dos sesiones cortas de ejercicio por semana para retomar las actividades que se dejaron. Se medirían las mismas variables y, además, las horas de estudio y los minutos de pantalla. Es una hipótesis a probar, porque depende del calendario académico y más factores.
+
+\section{Conclusiones y trabajo futuro}
+Los resultados de este seguimiento revelan una paradoja: el periodo en el que busqué monitorear y mejorar mi rutina demostró el abandono del ejercicio y un aumento en los desvelos por exámenes y tareas. Lejos de invalidar el ejercicio, los datos confirman que el problema central no es la falta de voluntad, sino la ausencia de una gestión estructurada del tiempo que equilibre la asistencia a la universidad, la alimentación, la actividad física, el estudio efectivo y el descanso.
+
+Al mismo tiempo, el análisis evidencia limitaciones prácticas que condicionan cualquier cambio, especialmente los días con horario universitario de 08:00 a 18:00~h, tras los cuales el agotamiento mental dificulta sostener actividades adicionales. Como trabajo futuro, propongo estructurar una rutina semanal según la carga horaria de cada día, tener un límite nocturno para el uso de pantallas y mantener la bitácora de sueño para medir cuantitativamente el impacto de estas mejoras en mi descanso y nivel de estrés.
+
+\section*{Declaración de uso de IA}
+Se usó un asistente de IA (Gemini, Google, consultado del 8-15 de noviembre de 2026) para (a) elaboración de la figura 2, (b) redactar el texto a inglés, (c) corregir faltas de ortografía y gramática y (d) hacer las referencias bibliográficas. Los datos de sueño, el contexto académico y personal y las conclusiones son propias.
+
+\begin{thebibliography}{99}
+
+\bibitem{ref1} D. J. Buysse, ``Sleep health: can we define it? Does it matter?,'' \emph{Sleep}, vol. 37, no. 1, pp. 9--17, 2014.
+
+\bibitem{ref2} M. Hirshkowitz \emph{et al.}, ``National Sleep Foundation's sleep time duration recommendations: methodology and results summary,'' \emph{Sleep Health}, vol. 1, no. 1, pp. 40--43, 2015.
+
+\bibitem{ref3} N. F. Watson \emph{et al.}, ``Recommended amount of sleep for a healthy adult: a joint consensus statement of the American Academy of Sleep Medicine and Sleep Research Society,'' \emph{Sleep}, vol. 38, no. 6, pp. 843--844, 2015.
+
+\bibitem{ref4} A. J. Scott, T. L. Webb, M. Martyn-St James, G. Rowse y S. Weich, ``Improving sleep quality leads to better mental health: a meta-analysis of randomised controlled trials,'' \emph{Sleep Med. Rev.}, vol. 60, art. 101556, dic. 2021.
+
+\bibitem{ref5} H. G. Lund, B. D. Reider, A. B. Whiting y J. R. Prichard, ``Sleep patterns and predictors of disturbed sleep in a large population of college students,'' \emph{J. Adolesc. Health}, vol. 46, no. 2, pp. 124--132, 2010.
+
+\bibitem{ref6} S. D. Hershner y R. D. Chervin, ``Causes and consequences of sleepiness among college students,'' \emph{Nat. Sci. Sleep}, vol. 6, pp. 73--84, 2014.
+
+\bibitem{ref7} V. Ibáñez, J. Silva y O. Cauli, ``A survey on sleep assessment methods,'' \emph{PeerJ}, vol. 6, e4849, 2018.
+
+\bibitem{ref8} M. Wittmann, J. Dinich, M. Merrow y T. Roenneberg, ``Social jetlag: misalignment of biological and social time,'' \emph{Chronobiol. Int.}, vol. 23, no. 1--2, pp. 497--509, 2006.
+
+\bibitem{ref9} T. Roenneberg, K. V. Allebrandt, M. Merrow y C. Vetter, ``Social jetlag and obesity,'' \emph{Curr. Biol.}, vol. 22, no. 10, pp. 939--943, 2012.
+
+\bibitem{ref10} X. Han, E. Zhou y D. Liu, ``Electronic media use and sleep quality: updated systematic review and meta-analysis,'' \emph{J. Med. Internet Res.}, vol. 26, e48356, 2024, doi: 10.2196/48356.
+
+\bibitem{ref11} L. Exelmans y J. Van den Bulck, ``Bedtime mobile phone use and sleep in adults,'' \emph{Soc. Sci. Med.}, vol. 148, pp. 93--101, 2016.
+
+\bibitem{ref12} J. S. Peltz, J. S. Bodenlos, J. N. Kingery y C. Abar, ``Psychological processes linking problematic smartphone use to sleep disturbance in young adults,'' \emph{Sleep Health}, vol. 9, no. 4, pp. 524--531, 2023.
+
+\bibitem{ref13} M.-J. Kater y A. A. Schlarb, ``Smartphone usage in adolescents: motives and link to sleep disturbances, stress and sleep reactivity,'' \emph{Somnologie}, vol. 24, no. 4, pp. 245--252, 2020.
+
+\bibitem{ref14} X. Zhai \emph{et al.}, ``Associations among physical activity and smartphone use with perceived stress and sleep quality of Chinese college students,'' \emph{Ment. Health Phys. Act.}, vol. 18, art. 100323, mar. 2020.
+
+\bibitem{ref15} M. Stanković, M. Nešić, S. Čičević y Z. Shi, ``Association of smartphone use with depression, anxiety, stress, sleep quality, and internet addiction. Empirical evidence from a smartphone application,'' \emph{Pers. Individ. Differ.}, vol. 168, art. 110342, ene. 2021.
+
+\bibitem{ref16} M. A. Kredlow, M. C. Capozzoli, B. A. Hearon, A. W. Calkins y M. W. Otto, ``The effects of physical activity on sleep: a meta-analytic review,'' \emph{J. Behav. Med.}, vol. 38, no. 3, pp. 427--449, 2015.
+
+\bibitem{ref17} T. Åkerstedt, ``Psychosocial stress and impaired sleep,'' \emph{Scand. J. Work Environ. Health}, vol. 32, no. 6, pp. 493--501, 2006.
+
+\bibitem{ref18} M. Hysing \emph{et al.}, ``Sleep and use of electronic devices in adolescence: results from a large population-based study,'' \emph{BMJ Open}, vol. 5, no. 1, e006748, 2015.
+
+\bibitem{ref19} B. Carter, P. Rees, L. Hale, D. Bhattacharjee y M. S. Paradkar, ``Association between portable screen-based media device access or use and sleep outcomes: a systematic review and meta-analysis,'' \emph{JAMA Pediatr.}, vol. 170, no. 12, pp. 1202--1208, 2016.
+
+\end{thebibliography}
+
+\end{document}
